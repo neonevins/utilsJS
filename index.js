@@ -13,24 +13,23 @@ Object.prototype[Symbol.iterator] = function*(){
  */
 Function.prototype.onceBind = (function(){
   let bindList = new Map
-  let self = this
   return function(obj, ...rest){
     // 如果这个函数没有onceBind过
-    if(!bindList.get(self)){
+    if(!bindList.get(this)){
       let map = new Map()
       map.set(obj, this.bind(obj, ...rest))
       bindList.set(
-        self,
+        this,
         map
       )
-      return bindList.get(self).get(obj)
+      return bindList.get(this).get(obj)
     }
-    let map = bindList.get(self)
+    let map = bindList.get(this)
     // 没有对这个对象设置过
     if(!map.get(obj)){
       map.set(obj, this.bind(obj, ...rest))
     }
     // 设置过这个对象的属性
-    return bindList.get(self).get(obj)
+    return bindList.get(this).get(obj)
   }
 })();
